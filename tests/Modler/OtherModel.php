@@ -1,21 +1,24 @@
 <?php
-namespace Modler;
 
-class OtherModel extends \Modler\Model
+namespace Modler\Tests;
+
+use Modler\Model;
+
+class OtherModel extends Model
 {
-    protected $properties = array(
+    protected array $properties = array(
         'test' => array(
             'description' => 'Test Property'
         )
     );
 
-    public function callMeMaybe($test)
+    public function callMeMaybe($test): void
     {
-        $this->setValue('test', 'foobarbaz - '.$test);
+        $this->setValue('test', 'foobarbaz - ' . $test);
     }
 
-    public function callMeReturnValue($test)
+    public function callMeReturnValue($test): string
     {
-        return 'this is a value: '.$test;
+        return 'this is a value: ' . $test;
     }
 }

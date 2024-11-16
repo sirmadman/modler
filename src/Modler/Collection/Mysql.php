@@ -2,34 +2,37 @@
 
 namespace Modler\Collection;
 
-class Mysql extends \Modler\Collection
+use Modler\Collection;
+use PDOStatement;
+
+class Mysql extends Collection
 {
-	private $db;
+    private object $db;
 
-	public function __construct($db)
-	{
-		$this->setDb($db);
-	}
+    public function __construct(object $db)
+    {
+        $this->setDb($db);
+    }
 
-	public function setDb($db)
-	{
-		$this->db = $db;
-	}
+    public function setDb(object $db)
+    {
+        $this->db = $db;
+    }
 
-	public function getDb()
-	{
-		return $this->db;
-	}
+    public function getDb(): object
+    {
+        return $this->db;
+    }
 
-	/**
+    /**
      * Fetch the data matching the results of the SQL operation
      *
-     * @param string $sql SQL statement
-     * @param array $data Data to use in fetch operation
-     * @param boolean $single Only fetch a single record
+     * @param  string  $sql    SQL statement
+     * @param  array   $data   Data to use in fetch operation
+     * @param  boolean $single Only fetch a single record
      * @return array Fetched data
      */
-    public function fetch($sql, array $data = array(), $single = false)
+    public function fetch(string $sql, array $data = array(), bool $single = false): array|bool
     {
         $sth = $this->getDb()->prepare($sql);
         if ($this->isFailure($sth, $sth)) {
@@ -46,15 +49,15 @@ class Mysql extends \Modler\Collection
     }
 
     /**
-     * @param PDOStatement|boolean $sth
-     * @param mixed $result
+     * @param  PDOStatement|boolean $sth
+     * @param  mixed                $result
      * @return boolean TRUE if $result indicates failure, FALSE otherwise
      */
-    private function isFailure($sth, $result)
+    private function isFailure(PDOStatement|bool $sth, mixed $result): bool
     {
         if ($result === false) {
             $error = $sth->errorInfo();
-            $this->lastError = 'DB ERROR: ['.$sth->errorCode().'] '.$error[2];
+            $this->lastError = 'DB ERROR: [' . $sth->errorCode() . '] ' . $error[2];
             error_log($this->lastError);
             return true;
         }

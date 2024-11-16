@@ -1,27 +1,55 @@
 {
-    "name":"enygma/modler",
+    "name":"sirmadman/modler",
     "type":"library",
-    "description":"A basic model library",
+    "description":"A basic model library forked from enygma/modler",
     "keywords":["model"],
-    "homepage":"https://github.com/enygma/modler.git",
+    "homepage":"https://github.com/sirmadman/modler",
     "license":"MIT",
     "authors":[
         {
             "name":"Chris Cornutt",
             "email":"ccornutt@phpdeveloper.org",
             "homepage":"http://www.phpdeveloper.org/"
+        },
+        {
+            "name":"Thomas Hägglund",
+            "email":"thomas.hgglund@gmail.com",
+            "homepage":"https://github.com/sirmadman"
         }
     ],
-    "require":{
-        "php":">=5.4"
+    "support": {
+        "source": "https://github.com/enygma/modler"
+    },
+    "require": {
+        "php": ">=8.1"
     },
     "require-dev": {
-        "phpunit/phpunit": "4.2.6",
-        "codeclimate/php-test-reporter": "dev-master"
+        "phpunit/phpunit": "*",
+        "squizlabs/php_codesniffer": "3.*"
     },
-    "autoload":{
-        "psr-0":{
-            "Modler":"src/"
+    "autoload": {
+        "psr-4": {
+            "Modler\\": "src/Modler"
+        },
+        "psr-0": {
+            "Modler": "src"
         }
+    },
+    "autoload-dev": {
+      "psr-4": {
+          "Modler\\Tests\\": "tests/Modler"
+      },
+      "psr-0": {
+          "Modler\\Tests": "tests"
+      }
+    },
+    "scripts": {
+        "test": "phpunit tests",
+        "phpcs": [
+            "phpcs --standard=PSR12 ./src"
+        ],
+        "phpcbf": [
+            "phpcbf --standard=PSR12 ./src"
+        ]
     }
 }

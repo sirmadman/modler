@@ -2,22 +2,28 @@
 
 namespace Modler;
 
-class Collection implements \Countable, \Iterator, \ArrayAccess
+use Countable;
+use Iterator;
+use ArrayAccess;
+
+class Collection implements Countable, Iterator, ArrayAccess
 {
-    const SORT_ASC = 'asc';
-    const SORT_DESC = 'desc';
+    public const SORT_ASC = 'asc';
+    public const SORT_DESC = 'desc';
 
     /**
      * Current set of data for collection
+     *
      * @var array
      */
-    private $data = array();
+    private array $data = array();
 
     /**
      * Current position in data (used in Iterator)
+     *
      * @var integer
      */
-    private $position = 0;
+    private int $position = 0;
 
     public function __construct(array $data = array())
     {
@@ -30,10 +36,11 @@ class Collection implements \Countable, \Iterator, \ArrayAccess
      * Magic method to catch get* calls to fetch a set of property values
      *
      * @param string $name Function name called
-     * @param array $args Arguments
+     * @param array  $args Arguments
+     *
      * @return null|array Results if found, null if not
      */
-    public function __call($name, array $args)
+    public function __call(string $name, array $args)
     {
         // If it starts with get*
         if (strpos($name, 'get') === 0) {
@@ -50,8 +57,10 @@ class Collection implements \Countable, \Iterator, \ArrayAccess
      * Set the current data for the collection
      *
      * @param array $data Data to assign to the collection
+     *
+     * @return void
      */
-    private function setData(array $data)
+    private function setData(array $data): void
     {
         $this->data = $data;
     }
@@ -62,7 +71,7 @@ class Collection implements \Countable, \Iterator, \ArrayAccess
      *
      * @return integer Count result
      */
-    public function count()
+    public function count(): int
     {
         return count($this->data);
     }
@@ -73,7 +82,7 @@ class Collection implements \Countable, \Iterator, \ArrayAccess
      *
      * @return mixed Current data item
      */
-    public function current()
+    public function current(): mixed
     {
         return $this->data[$this->position];
     }
@@ -83,7 +92,7 @@ class Collection implements \Countable, \Iterator, \ArrayAccess
      *
      * @return integer Position value
      */
-    public function key()
+    public function key(): int
     {
         return $this->position;
     }
@@ -93,15 +102,18 @@ class Collection implements \Countable, \Iterator, \ArrayAccess
      *
      * @return integer Next position
      */
-    public function next()
+    #[\ReturnTypeWillChange]
+    public function next(): int
     {
         return ++$this->position;
     }
 
     /**
      * Rewind to the beginning of the set (position = 0)
+     *
+     * @return void
      */
-    public function rewind()
+    public function rewind(): void
     {
         $this->position = 0;
     }
@@ -111,7 +123,7 @@ class Collection implements \Countable, \Iterator, \ArrayAccess
      *
      * @return boolean Exists/doesn't exist
      */
-    public function valid()
+    public function valid(): bool
     {
         return isset($this->data[$this->position]);
     }
@@ -120,9 +132,10 @@ class Collection implements \Countable, \Iterator, \ArrayAccess
      * Check to see if an offset exists (ArrayAccess)
      *
      * @param integer|string $offset Offset
+     *
      * @return boolean Offset exists
      */
-    public function offsetExists($offset)
+    public function offsetExists(mixed $offset): bool
     {
         return isset($this->data[$offset]);
     }
@@ -131,9 +144,10 @@ class Collection implements \Countable, \Iterator, \ArrayAccess
      * Get the value for the offset (ArrayAccess)
      *
      * @param integer|string $offset Offset
+     *
      * @return mixed Offset value
      */
-    public function offsetGet($offset)
+    public function offsetGet(mixed $offset): mixed
     {
         return $this->data[$offset];
     }
@@ -142,9 +156,11 @@ class Collection implements \Countable, \Iterator, \ArrayAccess
      * Set a value on the given offset
      *
      * @param integer|seting $offset Offset
-     * @param mixed $value Value to set to offset
+     * @param mixed          $value  Value to set to offset
+     *
+     * @return void
      */
-    public function offsetSet($offset, $value)
+    public function offsetSet(mixed $offset, mixed $value): void
     {
         $this->data[$offset] = $value;
     }
@@ -153,8 +169,10 @@ class Collection implements \Countable, \Iterator, \ArrayAccess
      * Unset an offset if it exists
      *
      * @param integer|seting $offset Offset
+     *
+     * @return void
      */
-    public function offsetUnset($offset)
+    public function offsetUnset(mixed $offset): void
     {
         if (isset($this->data[$offset])) {
             unset($this->data[$offset]);
@@ -165,8 +183,10 @@ class Collection implements \Countable, \Iterator, \ArrayAccess
      * Add an item to the collection
      *
      * @param mixed $data Data item to add
+     *
+     * @return void
      */
-    public function add($data)
+    public function add(mixed $data): void
     {
         $this->data[] = $data;
     }
@@ -175,8 +195,10 @@ class Collection implements \Countable, \Iterator, \ArrayAccess
      * Remove an item from the collection by index ID
      *
      * @param integer $dataId Item ID
+     *
+     * @return void
      */
-    public function remove($dataId)
+    public function remove(int $dataId): void
     {
         if (array_key_exists($dataId, $this->data)) {
             unset($this->data[$dataId]);
@@ -188,9 +210,10 @@ class Collection implements \Countable, \Iterator, \ArrayAccess
      *     If the "expand" is defined, toArray is called on sub-objects too
      *
      * @param boolean $expand Expand sub-elements with toArray too
+     *
      * @return array Data set as array output
      */
-    public function toArray($expand = false)
+    public function toArray(bool $expand = false): array
     {
         if ($expand === true) {
             $result = array();
@@ -212,9 +235,10 @@ class Collection implements \Countable, \Iterator, \ArrayAccess
      *     in a callable function
      *
      * @param callable $function Filtering function
+     *
      * @return \Modler\Collection instance
      */
-    public function filter($function)
+    public function filter(callable $function): self
     {
         $class = get_class();
         $self = new $class();
@@ -233,11 +257,12 @@ class Collection implements \Countable, \Iterator, \ArrayAccess
      *
      * @param integer $start Start index
      * @param integer $items Number of items to return
+     *
      * @return array Sliced set of data
      */
-    public function slice($start, $items = null)
+    public function slice(int $start, ?int $items = null): array
     {
-        $end = ($items !== null) ? $items : count($this->data)-1;
+        $end = ($items !== null) ? $items : count($this->data) - 1;
         return array_slice($this->data, $start, $end);
     }
 
@@ -245,9 +270,10 @@ class Collection implements \Countable, \Iterator, \ArrayAccess
      * Check to see if the collection contains the given data
      *
      * @param mixed $data Data to locate
+     *
      * @return boolean Found/not found result
      */
-    public function contains($data)
+    public function contains(mixed $data): bool
     {
         foreach ($this->data as $item) {
             if ($item == $data) {
@@ -261,9 +287,10 @@ class Collection implements \Countable, \Iterator, \ArrayAccess
      * Alias to the "slice" function but a bit simpler
      *
      * @param integer $limit Number of times to reduce down to
+     *
      * @return \Modeler\Collection Collection instance
      */
-    public function take($limit)
+    public function take(int $limit): self
     {
         $data = $this->slice(0, $limit);
         $collection = new Collection($data);
@@ -275,10 +302,11 @@ class Collection implements \Countable, \Iterator, \ArrayAccess
      *     and the direction given
      *
      * @param string $direction Direction constant value (SORT_ASC/SORT_DESC)
-     * @param string $property Property name
+     * @param string $property  Property name
+     *
      * @return object Modler\Collection instance
      */
-    public function order($direction = null, $property = null)
+    public function order(?string $direction = null, ?string $property = null): self
     {
         $direction = ($direction === null || $direction === self::SORT_DESC)
             ? self::SORT_DESC : self::SORT_ASC;
@@ -308,12 +336,13 @@ class Collection implements \Countable, \Iterator, \ArrayAccess
      * Find match(es) in the current set of data based on
      *     the provided proprty and value
      *
-     * @param string $property Proprty name to match on
-     * @param mixed $value Value to match
-     * @param boolean $all Return all matches or just single (default is single)
+     * @param string  $property Proprty name to match on
+     * @param mixed   $value    Value to match
+     * @param boolean $all      Return all matches or just single (default is single)
+     *
      * @return mixed Match(es) if found, null if not
      */
-    public function find($property, $value, $all = false)
+    public function find(string $property, mixed $value, bool $all = false): mixed
     {
         $match = null;
         $matches = array();

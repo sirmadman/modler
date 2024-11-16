@@ -1,16 +1,20 @@
 <?php
 
-namespace Modler;
+namespace Modler\Tests;
 
-class ModelTest extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+use Modler\Tests\TestModel;
+use InvalidArgumentException;
+
+class ModelTest extends TestCase
 {
-    private $model;
+    private TestModel $model;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->model = new TestModel();
     }
-    public function tearDown()
+    public function tearDown(): void
     {
         unset($this->model);
     }
@@ -18,7 +22,7 @@ class ModelTest extends \PHPUnit_Framework_TestCase
     /**
      * Test that the data given at init is loaded
      */
-    public function testLoadData()
+    public function testLoadData(): void
     {
         $data = array('test' => 'foo');
         $model = new TestModel($data);
@@ -30,7 +34,7 @@ class ModelTest extends \PHPUnit_Framework_TestCase
      * Test that a property not known in the properties
      *     isn't set when loaded
      */
-    public function testLoadUnknownProperty()
+    public function testLoadUnknownProperty(): void
     {
         $this->model->load(array('foo' => 'bar'));
         $this->assertEmpty($this->model->toArray());
@@ -39,7 +43,7 @@ class ModelTest extends \PHPUnit_Framework_TestCase
     /**
      * Test the getter/setter for properties
      */
-    public function testGetSetProperties()
+    public function testGetSetProperties(): void
     {
         $property = array(
             'description' => 'This is a test'
@@ -61,8 +65,10 @@ class ModelTest extends \PHPUnit_Framework_TestCase
      *
      * @expectedException \InvalidArgumentException
      */
-    public function testSetExistingProperty()
+    public function testSetExistingProperty(): void
     {
+        $this->expectException(InvalidArgumentException::class);
+
         $this->model->addProperty('test', array(
             'description' => 'This is a duplicate'
         ));
@@ -72,7 +78,7 @@ class ModelTest extends \PHPUnit_Framework_TestCase
      * Test that a property can be overrideen with the
      *     extra property (replacing one already there)
      */
-    public function testSetExistingPropertyOverride()
+    public function testSetExistingPropertyOverride(): void
     {
         $this->model->addProperty('test', array(
             'description' => 'This is a duplicate'
@@ -88,7 +94,7 @@ class ModelTest extends \PHPUnit_Framework_TestCase
     /**
      * Test the getter/setter for model values
      */
-    public function testGetSetValues()
+    public function testGetSetValues(): void
     {
         $value = 'test';
         $this->model->setValue('foo', $value);
@@ -99,7 +105,7 @@ class ModelTest extends \PHPUnit_Framework_TestCase
     /**
      * Test that the magic get/set methods are doing their job
      */
-    public function testMagicGetSetProperty()
+    public function testMagicGetSetProperty(): void
     {
         $value = 'testing123';
         $this->model->test = $value;
@@ -113,8 +119,10 @@ class ModelTest extends \PHPUnit_Framework_TestCase
      *
      * @expectedException \InvalidArgumentException
      */
-    public function testMagicSetInvalidProperty()
+    public function testMagicSetInvalidProperty(): void
     {
+        $this->expectException(InvalidArgumentException::class);
+
         $this->model->foo = 'test';
     }
 
@@ -123,15 +131,17 @@ class ModelTest extends \PHPUnit_Framework_TestCase
      *
      * @expectedException \InvalidArgumentException
      */
-    public function testMagicGetInvalidProperty()
+    public function testMagicGetInvalidProperty(): void
     {
+        $this->expectException(InvalidArgumentException::class);
+
         echo $this->model->foobar;
     }
 
     /**
      * Test that the get* handling is working for property values
      */
-    public function testMagicGetFunction()
+    public function testMagicGetFunction(): void
     {
         $this->model->test = 'foo';
         $this->assertEquals('foo', $this->model->getTest());
@@ -140,7 +150,7 @@ class ModelTest extends \PHPUnit_Framework_TestCase
     /**
      * Test that the get* call on an invalid property returns null
      */
-    public function testMagicGetFunctionInvalid()
+    public function testMagicGetFunctionInvalid(): void
     {
         $this->assertNull($this->model->getFoo());
     }
@@ -150,19 +160,19 @@ class ModelTest extends \PHPUnit_Framework_TestCase
      *     is correctly linked. If the link is correct, "callMeMaybe"
      *     is executed and the "test" value is set
      */
-    public function testGetRelationValid()
+    public function testGetRelationValid(): void
     {
         $this->model->test = 'woo';
         $result = $this->model->relateToMe;
 
-        $this->assertEquals(get_class($result), 'Modler\\OtherModel');
+        $this->assertEquals(get_class($result), 'Modler\\Tests\\OtherModel');
         $this->assertEquals($result->test, 'foobarbaz - woo');
     }
 
     /**
      * Test that the "return value" works correctly
      */
-    public function testGetRelationReturnValue()
+    public function testGetRelationReturnValue(): void
     {
         $this->model->test = 'woo';
         $result = $this->model->relateToMeValue;
@@ -176,8 +186,10 @@ class ModelTest extends \PHPUnit_Framework_TestCase
      *
      * @expectedException \InvalidArgumentException
      */
-    public function testGetRelationInvalidModel()
+    public function testGetRelationInvalidModel(): void
     {
+        $this->expectException(InvalidArgumentException::class);
+
         $this->model->badModel;
     }
 
@@ -187,18 +199,20 @@ class ModelTest extends \PHPUnit_Framework_TestCase
      *
      * @expectedException \InvalidArgumentException
      */
-    public function testGetRelationInvalidMethod()
+    public function testGetRelationInvalidMethod(): void
     {
+        $this->expectException(InvalidArgumentException::class);
+
         $this->model->badMethod;
     }
 
     /**
      * Test that, when the required field is set, verification passes
      */
-    public function testVerifyPass()
+    public function testVerifyPass(): void
     {
         $this->model->imRequired = 'test';
-        $this->model->verify();
+        $this->assertTrue($this->model->verify());
     }
 
     /**
@@ -206,24 +220,26 @@ class ModelTest extends \PHPUnit_Framework_TestCase
      *
      * @expectedException \InvalidArgumentException
      */
-    public function testVerifyFail()
+    public function testVerifyFail(): void
     {
+        $this->expectException(InvalidArgumentException::class);
+
         $this->model->verify();
     }
 
     /**
      * Test the "ignore" property handling
      */
-    public function testVerifyIgnorePass()
+    public function testVerifyIgnorePass(): void
     {
         $ignore = array('imRequired');
-        $this->model->verify($ignore);
+        $this->assertTrue($this->model->verify($ignore));
     }
 
     /**
      * Test that the validation passes with the correct (matching) value
      */
-    public function testValidateMethodPass()
+    public function testValidateMethodPass(): void
     {
         $this->model->imRequired = 'test';
         $this->model->testValidate = 'test1234';
@@ -236,18 +252,20 @@ class ModelTest extends \PHPUnit_Framework_TestCase
      *
      * @expectedException \InvalidArgumentException
      */
-    public function testValidateMethodFail()
+    public function testValidateMethodFail(): void
     {
+        $this->expectException(InvalidArgumentException::class);
+
         $this->model->imRequired = 'test';
         $this->model->testValidate = '1234test';
 
-        $this->model->verify();
+        $this->assertTrue($this->model->verify());
     }
 
     /**
      * Try to set a guarded value on load
      */
-    public function testSetGuardedOnLoad()
+    public function testSetGuardedOnLoad(): void
     {
         $data = array('guarded' => 'this will not work');
         $this->model->load($data);
@@ -258,7 +276,7 @@ class ModelTest extends \PHPUnit_Framework_TestCase
     /**
      * Try to set a guarded value as a property
      */
-    public function testSetGuardedProperty()
+    public function testSetGuardedProperty(): void
     {
         $this->model->guarded = 'this will not work either';
         $this->assertNull($this->model->guarded);
@@ -268,7 +286,7 @@ class ModelTest extends \PHPUnit_Framework_TestCase
      * Test the "enforce guard" parameter on the load
      *     This allows us to override the check (useful for database loads)
      */
-    public function testSetGuardedOnLoadNotEnforced()
+    public function testSetGuardedOnLoadNotEnforced(): void
     {
         $data = array('guarded' => 'this will work this time');
         $this->model->load($data, false);
@@ -282,7 +300,7 @@ class ModelTest extends \PHPUnit_Framework_TestCase
     /**
      * Test the removal of values through a "filter" in the toArray method
      */
-    public function testFilterRemoveValues()
+    public function testFilterRemoveValues(): void
     {
         $this->model->test = 'foobar';
         $filter = array('test');

@@ -1,9 +1,12 @@
 <?php
-namespace Modler;
 
-class TestModel extends \Modler\Model
+namespace Modler\Tests;
+
+use Modler\Model;
+
+class TestModel extends Model
 {
-    protected $properties = array(
+    protected array $properties = array(
         'id' => array(
             'description' => 'ID',
             'type' => 'integer'
@@ -18,7 +21,7 @@ class TestModel extends \Modler\Model
         'relateToMe' => array(
             'type' => 'relation',
             'relation' => array(
-                'model' => '\\Modler\\OtherModel',
+                'model' => '\\Modler\\Tests\\OtherModel',
                 'method' => 'callMeMaybe',
                 'local' => 'test'
             )
@@ -26,7 +29,7 @@ class TestModel extends \Modler\Model
         'relateToMeValue' => array(
             'type' => 'relation',
             'relation' => array(
-                'model' => '\\Modler\\OtherModel',
+                'model' => '\\Modler\\Tests\\OtherModel',
                 'method' => 'callMeReturnValue',
                 'local' => 'test',
                 'return' => 'value'
@@ -43,7 +46,7 @@ class TestModel extends \Modler\Model
         'badMethod' => array(
             'type' => 'relation',
             'relation' => array(
-                'model' => '\\Modler\\OtherModel',
+                'model' => '\\Modler\\Tests\\OtherModel',
                 'method' => 'badMethod',
                 'local' => 'badProperty'
             )
@@ -58,7 +61,7 @@ class TestModel extends \Modler\Model
         )
     );
 
-    public function validateTestvalidate($value)
+    public function validateTestvalidate($value): bool
     {
         return ($value === 'test1234');
     }

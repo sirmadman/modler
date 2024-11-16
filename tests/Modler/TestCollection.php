@@ -1,7 +1,9 @@
 <?php
-namespace Modler;
 
-class TestCollection extends \Modler\Collection
+namespace Modler\Tests;
+
+use Modler\Collection;
+
+class TestCollection extends Collection
 {
-
 }

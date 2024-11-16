@@ -1,16 +1,19 @@
 <?php
 
-namespace Modler;
+namespace Modler\Tests;
 
-class CollectionTest extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+use Modler\Tests\TestCollection;
+
+class CollectionTest extends TestCase
 {
-    private $collection;
+    private TestCollection $collection;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->collection = new TestCollection();
     }
-    public function tearDown()
+    public function tearDown(): void
     {
         unset($this->collection);
     }
@@ -18,7 +21,7 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
     /**
      * Test that, by default, a collection is empty (count)
      */
-    public function testCollectionEmpty()
+    public function testCollectionEmpty(): void
     {
         $this->assertEquals(count($this->collection), 0);
     }
@@ -26,7 +29,7 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
     /**
      * Test that an item is added to the collection correctly
      */
-    public function testAddToCollection()
+    public function testAddToCollection(): void
     {
         $data = array('foo' => 'bar');
         $this->collection->add($data);
@@ -37,7 +40,7 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
     /**
      * Test the iteration of the collection
      */
-    public function testIterateCollection()
+    public function testIterateCollection(): void
     {
         $this->collection->add('foo');
         $this->collection->add('bar');
@@ -50,7 +53,7 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
     /**
      * Test the return of a collection values as an array
      */
-    public function testCollectionToArray()
+    public function testCollectionToArray(): void
     {
         $data = array('foo' => 'bar');
         $this->collection->add($data);
@@ -65,7 +68,7 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
      * Test the output of the toArray when one value is an object
      *     and another is a string
      */
-    public function testCollectionToArrayMixed()
+    public function testCollectionToArrayMixed(): void
     {
         $model = new TestModel();
         $model->test = 'foobarbaz';
@@ -87,7 +90,7 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
      * Test the expansion of the inner models when toArray
      *     is called on a collection with expand = true
      */
-    public function testCollectionToArrayExpanded()
+    public function testCollectionToArrayExpanded(): void
     {
         $model = new TestModel();
         $model->test = 'foobarbaz';
@@ -103,7 +106,7 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
     /**
      * Test that a collection can be iterated over
      */
-    public function testCollectionIteratable()
+    public function testCollectionIteratable(): void
     {
         $this->collection->add(array('foo' => 'bar'));
         $this->collection->add(array('baz' => 'test'));
@@ -118,7 +121,7 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
     /**
      * Test the removal of an item from the collection
      */
-    public function testRemoveFromCollection()
+    public function testRemoveFromCollection(): void
     {
         $this->collection->add(array('foo' => 'bar'));
         $this->collection->add(array('baz' => 'test'));
@@ -133,12 +136,12 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
     /**
      * Test that the filter handling works as expected
      */
-    public function testFilterByValue()
+    public function testFilterByValue(): void
     {
         $this->collection->add(array('foo' => 'bar'));
         $this->collection->add(array('baz' => 'test'));
 
-        $filtered = $this->collection->filter(function($value) {
+        $filtered = $this->collection->filter(function ($value) {
             return (isset($value['foo']));
         });
 
@@ -151,7 +154,7 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
     /**
      * Test the slicing of the collection data
      */
-    public function testSliceCollection()
+    public function testSliceCollection(): void
     {
         $this->collection->add('foo');
         $this->collection->add('bar');
@@ -171,7 +174,7 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
     /**
      * Test the "contains" checking for the collections
      */
-    public function testCollectionContains()
+    public function testCollectionContains(): void
     {
         $this->collection->add('foo');
         $this->collection->add('bar');
@@ -182,7 +185,7 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
     /**
      * Test that the collection does not contain the value
      */
-    public function testCollectionDoesNotContain()
+    public function testCollectionDoesNotContain(): void
     {
         $this->collection->add('foo');
         $this->collection->add('bar');
@@ -193,7 +196,7 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
     /**
      * Test the "take" method on a collection
      */
-    public function testLimitWithTake()
+    public function testLimitWithTake(): void
     {
         $data = array('foo', 'bar', 'baz', 'quux', 'foobar', 'barbaz');
         foreach ($data as $value) {
@@ -212,7 +215,7 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
     /**
      * Test the default sorting (as string), descending
      */
-    public function testOrderStringDataDefaultSort()
+    public function testOrderStringDataDefaultSort(): void
     {
         $data = array('foo', 'bar', 'quux', 'baz', 'foobar', 'barbaz');
         foreach ($data as $value) {
@@ -230,7 +233,7 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
     /**
      * Test the order by a property with the default sort (well, DESC is default)
      */
-    public function testOrderObjectPropertyDefaultSort()
+    public function testOrderObjectPropertyDefaultSort(): void
     {
         $data = array('foo', 'bar', 'quux', 'baz', 'foobar', 'barbaz');
         foreach ($data as $value) {
@@ -250,7 +253,7 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
     /**
      * Test the "find" when the collection contains Modler models
      */
-    public function testFindModlerModels()
+    public function testFindModlerModels(): void
     {
         for ($i = 1; $i <= 10; $i++) {
             $model = new TestModel(['id' => $i]);
@@ -263,7 +266,7 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
     /**
      * Test the "find" when the collection contains regular objects
      */
-    public function testFndSimpleObject()
+    public function testFndSimpleObject(): void
     {
         for ($i = 1; $i <= 10; $i++) {
             $model = new \stdClass();
@@ -277,7 +280,7 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
     /**
      * Test the "find" when the collection contains arrays
      */
-    public function testFindArrays()
+    public function testFindArrays(): void
     {
         for ($i = 1; $i <= 10; $i++) {
             $item = array('id' => $i);
@@ -290,7 +293,7 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
     /**
      * Test the "find" when the collection contains just values
      */
-    public function testFindJustValues()
+    public function testFindJustValues(): void
     {
         for ($i = 1; $i <= 10; $i++) {
             $this->collection->add($i);
@@ -303,7 +306,7 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
      * Test the "find" when the "all" option is given
      *     telling it to return a set not just the first match
      */
-    public function testFindMatchAll()
+    public function testFindMatchAll(): void
     {
         $this->collection->add(new TestModel(['id' => 2]));
         $this->collection->add(new TestModel(['id' => 1]));
