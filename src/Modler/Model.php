@@ -185,7 +185,7 @@ class Model
      *
      * @return object Model instance
      */
-    public function makeModelInstance(string $model): self
+    public function makeModelInstance(string $model): object
     {
         $instance = new $model();
         return $instance;
