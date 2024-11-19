@@ -1,9 +1,11 @@
 <?php
 
-namespace Modler\Tests;
+namespace Modler;
+
+include_once __DIR__ . '/TestModel.php';
+include_once __DIR__ . '/OtherModel.php';
 
 use PHPUnit\Framework\TestCase;
-use Modler\Tests\TestModel;
 use InvalidArgumentException;
 
 class ModelTest extends TestCase
@@ -165,7 +167,7 @@ class ModelTest extends TestCase
         $this->model->test = 'woo';
         $result = $this->model->relateToMe;
 
-        $this->assertEquals(get_class($result), 'Modler\\Tests\\OtherModel');
+        $this->assertEquals(get_class($result), OtherModel::class);
         $this->assertEquals($result->test, 'foobarbaz - woo');
     }
 

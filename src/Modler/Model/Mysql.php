@@ -82,7 +82,7 @@ class Mysql extends Model
     *
     * @return object Model instance
     */
-    public function makeModelInstance(string $model): Model
+    public function makeModelInstance(string $model): object
     {
         $instance = new $model($this->getDb());
         return $instance;

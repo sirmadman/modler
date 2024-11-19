@@ -1,6 +1,6 @@
 <?php
 
-namespace Modler\Tests;
+namespace Modler;
 
 use Modler\Model;
 
@@ -21,7 +21,7 @@ class TestModel extends Model
         'relateToMe' => array(
             'type' => 'relation',
             'relation' => array(
-                'model' => '\\Modler\\Tests\\OtherModel',
+                'model' => OtherModel::class,
                 'method' => 'callMeMaybe',
                 'local' => 'test'
             )
@@ -29,7 +29,7 @@ class TestModel extends Model
         'relateToMeValue' => array(
             'type' => 'relation',
             'relation' => array(
-                'model' => '\\Modler\\Tests\\OtherModel',
+                'model' => OtherModel::class,
                 'method' => 'callMeReturnValue',
                 'local' => 'test',
                 'return' => 'value'
@@ -46,7 +46,7 @@ class TestModel extends Model
         'badMethod' => array(
             'type' => 'relation',
             'relation' => array(
-                'model' => '\\Modler\\Tests\\OtherModel',
+                'model' => OtherModel::class,
                 'method' => 'badMethod',
                 'local' => 'badProperty'
             )

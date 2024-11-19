@@ -24,8 +24,8 @@
         "php": ">=8.1"
     },
     "require-dev": {
-        "phpunit/phpunit": "*",
-        "squizlabs/php_codesniffer": "3.*"
+        "phpunit/phpunit": ">=10.5.38",
+        "squizlabs/php_codesniffer": "^3.11.1"
     },
     "autoload": {
         "psr-4": {
@@ -34,14 +34,6 @@
         "psr-0": {
             "Modler": "src"
         }
-    },
-    "autoload-dev": {
-      "psr-4": {
-          "Modler\\Tests\\": "tests/Modler"
-      },
-      "psr-0": {
-          "Modler\\Tests": "tests"
-      }
     },
     "scripts": {
         "test": "phpunit tests",

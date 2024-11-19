@@ -1,9 +1,10 @@
 <?php
 
-namespace Modler\Tests;
+namespace Modler;
+
+include_once __DIR__ . '/TestCollection.php';
 
 use PHPUnit\Framework\TestCase;
-use Modler\Tests\TestCollection;
 
 class CollectionTest extends TestCase
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Modler\Tests;
+namespace Modler;
 
 use Modler\Model;
 
